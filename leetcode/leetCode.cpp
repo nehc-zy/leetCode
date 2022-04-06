@@ -55,15 +55,91 @@ void Solution::nextPermutation(std::vector<int>& nums) {
 	return;
 }
 
+//只要考虑一个问题，要查找什么，最后left right停留的位置就是要查找的，没有就找不到
+int Solution::binarySearch(std::vector<int>&nums, int target) {
+	int left = 0;
+	int right = nums.size() - 1;
+	while (left <= right) {
+		int mid = left + (right - left) >> 2;
+		if (nums[mid] == target)return mid;
+		else if (nums[mid] > target)right = mid - 1;
+		else left = mid + 1;
+	}
+	return -1;
+}    
+//只要考虑一个问题，要找的是比target值大，但同时又比右边缘小，所以left==right时停在最边缘的target或者边缘target右边一个
+std::vector<int> Solution::binarySearchEdge(std::vector<int>& nums, int target) {
+	std::vector<int>res;
+	int leftEdge = -1;
+	int rightEdge = -1;
+	int left = 0;
+	int right = nums.size() - 1;
+	while (left <= right) {
+		//防止溢出
+		//左边界
+		int mid = left + ((right - left) >> 1);
+		if (nums[mid] == target) {
+			right = mid - 1;
+			leftEdge = mid;
+		}
+		else if (nums[mid] < target)left = mid + 1;
+		else right = mid - 1;
+	}
+	res.push_back(leftEdge);
+
+	//右边界
+	left = 0;
+	right = nums.size() - 1;
+	while (left <= right) {
+		int mid = left + ((right - left) >> 1);
+		if (nums[mid] == target) {
+			left = mid + 1;
+			rightEdge = mid;
+		}
+		else if (nums[mid] > target)right = mid - 1;
+		else left = mid + 1;
+	}
+	res.push_back(rightEdge);
+	return res;
+}
+
+
+//回溯是一种思想，dfs是实现回溯的一种载体，dfs是要遍历所有结果，所谓剪枝即通过某种逻辑提前不检索某种结果
+//所有的回溯都要实现画出搜索树的图，以下为全排列的一种回溯方法
+//时间复杂度我觉得是N！，实际是N*N！，存疑
+void Solution::dfs(std::vector<int>& nums, int len, std::vector<bool>& used,std::vector<int>& path, std::vector<std::vector<int>>& res){
+	if (path.size() == len) {
+		res.push_back(path);
+		return;
+	}
+	for (int i = 0; i < nums.size(); i++) {
+		if (!used[i]) {
+			path.push_back(nums[i]);
+			used[i] = true;
+			dfs(nums, len, used, path, res);
+			path.pop_back();
+			used[i] = false;
+		}
+	}
+	return;
+
+ }
+
 int main() 
 {
-	std::vector<int> nums = {2,3,1};
+	std::vector<int> nums = {1,2,3};
 	//std::vector<int> nums = { 0,0,0,0,0};
 	//Solution::quickSort2(nums, 0, nums.size() - 1);
-	Solution::nextPermutation(nums);
-	for (int i = 0; i < nums.size(); i++) {
-		std::cout << nums[i] << std::endl;
-	}
+	//std::vector<int> res = Solution::binarySearchEdge(nums,8);
+	//for (int i = 0; i < res.size(); i++) {
+	//	std::cout << res[i] << std::endl;
+	//}
+	//求数组数字的全排列的回溯
+	int len = nums.size();
+	std::vector<bool> used(nums.size(), false);
+	std::vector<int> path;
+	std::vector<std::vector<int>> res;
+	Solution::dfs(nums, len, used, path, res);
 	system("pause");
 	return 0;
 
