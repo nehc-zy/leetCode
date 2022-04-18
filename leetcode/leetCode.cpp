@@ -125,21 +125,26 @@ void Solution::dfs(std::vector<int>& nums, int len, std::vector<bool>& used,std:
 
  }
 
+//合并区间之后的整理，2022.4.13
+//void  Solution::merge(std::vector<vector<int>>& nums) {
+//
+//}
+
 int main() 
 {
-	std::vector<int> nums = {1,2,3};
-	//std::vector<int> nums = { 0,0,0,0,0};
-	//Solution::quickSort2(nums, 0, nums.size() - 1);
+	std::vector<int> nums = {2,0,2,1,1,0};
+	
+	Solution::quickSort2(nums, 0, nums.size() - 1);
 	//std::vector<int> res = Solution::binarySearchEdge(nums,8);
-	//for (int i = 0; i < res.size(); i++) {
-	//	std::cout << res[i] << std::endl;
-	//}
+	for (int i = 0; i < nums.size(); i++) {
+		std::cout << nums[i] << std::endl;
+	}
 	//求数组数字的全排列的回溯
-	int len = nums.size();
+	/*int len = nums.size();
 	std::vector<bool> used(nums.size(), false);
 	std::vector<int> path;
 	std::vector<std::vector<int>> res;
-	Solution::dfs(nums, len, used, path, res);
+	Solution::dfs(nums, len, used, path, res);*/
 	system("pause");
 	return 0;
 
